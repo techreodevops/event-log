@@ -47,9 +47,8 @@ app.UseSwaggerUI(c =>
 
 app.Run();
 
-
+[JsonSerializable(typeof(MessageLogReqDto))]
 [JsonSerializable(typeof(ProviderLogReqDto))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-
-}
+[JsonSerializable(typeof(StructuredLogReqDto))]
+[JsonSerializable(typeof(TransactionLogReqDto))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext { }

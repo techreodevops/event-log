@@ -1,6 +1,7 @@
 ﻿namespace EventLog.Middleware.Dtos.Common.Request
 {
     public sealed record StructuredLogReqDto(
+        string ProviderId,
         string UserId,
         string Entity,
         string Method,
