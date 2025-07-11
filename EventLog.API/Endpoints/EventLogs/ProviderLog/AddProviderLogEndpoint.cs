@@ -10,8 +10,8 @@ namespace EventLog.API.Endpoints.EventLogs.ProviderLog
         {
             app.MapPost("provider", async (Req.ProviderLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
-                Res.ProviderLogResDto response = await serviceFactoryProvider(request.ProviderId).ProviderService.RegisterProviderAsync(request);
-                Results.Ok(response);
+                Res.ProviderLogResDto response = await serviceFactoryProvider(request.ProviderId).ProviderService.RegisterProviderLogAsync(request);
+                return Results.Ok(response);
             })
             .WithName("AddProviderLog")
             .Produces<Res.ProviderLogResDto>(StatusCodes.Status200OK)

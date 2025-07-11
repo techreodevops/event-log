@@ -9,8 +9,10 @@
       "applicationUrl": "http://localhost:5205",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "AWSATHENA_DB": "byndfi_dev",
         "AWSS3_URL": "https://zblhq06zq2.execute-api.sa-east-1.amazonaws.com/dev/logs",
-        "AWSS3_API_KEY": "sf3E0U94Zv7FQSN8yCVqq2gQcKhgL4JC2V05HrjW"
+        "AWSS3_API_KEY": "sf3E0U94Zv7FQSN8yCVqq2gQcKhgL4JC2V05HrjW",
+        "AWSS3_URI": "s3://325723654089-logs-dev"
       }
     }
   }

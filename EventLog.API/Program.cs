@@ -1,6 +1,8 @@
+using Amazon.Athena;
 using EventLog.API.Extensions;
 using EventLog.Middleware.Contracts.Factories;
 using EventLog.Middleware.Dtos.Common.Request;
+using EventLog.Middleware.Dtos.Common.Response;
 using EventLog.Service.Provider.Aws;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -32,6 +34,9 @@ services.AddScoped<Func<string, IServiceFactoryProvider>>(serviceFactory => key 
 
 services.AddScoped<ServiceFactoryAws>();
 
+services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+services.AddAWSService<IAmazonAthena>();
+
 
 WebApplication app = builder.Build();
 
@@ -51,4 +56,5 @@ app.Run();
 [JsonSerializable(typeof(ProviderLogReqDto))]
 [JsonSerializable(typeof(StructuredLogReqDto))]
 [JsonSerializable(typeof(TransactionLogReqDto))]
+[JsonSerializable(typeof(GetByIdProviderLogResDto))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext { }

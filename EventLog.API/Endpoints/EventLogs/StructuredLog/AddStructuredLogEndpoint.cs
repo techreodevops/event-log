@@ -11,7 +11,7 @@ namespace EventLog.API.Endpoints.EventLogs.StructuredLog
             app.MapPost("structured", async (Req.StructuredLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
                 Res.StructuredLogResDto response = await serviceFactoryProvider(request.ProviderId).ProviderService.RegisterStructuredLogAsync(request);
-                Results.Ok(response);
+                return Results.Ok(response);
             })
             .WithName("AddStructuredLog")
             .Produces<Res.StructuredLogResDto>(StatusCodes.Status200OK)

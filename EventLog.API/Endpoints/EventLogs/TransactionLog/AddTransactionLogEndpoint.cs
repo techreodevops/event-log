@@ -11,7 +11,7 @@ namespace EventLog.API.Endpoints.EventLogs.TransactionLog
             app.MapPost("transaction", async (Req.TransactionLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
                 Res.TransactionLogResDto response = await serviceFactoryProvider(request.ProviderId).ProviderService.RegisterTransactionLogAsync(request);
-                Results.Ok(response);
+                return Results.Ok(response);
             })
             .WithName("AddTransactionLog")
             .Produces<Res.TransactionLogResDto>(StatusCodes.Status200OK)

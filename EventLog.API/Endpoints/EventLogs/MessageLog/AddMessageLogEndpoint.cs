@@ -11,7 +11,7 @@ namespace EventLog.API.Endpoints.EventLogs.MessageLog
             app.MapPost("message", async (Req.MessageLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
                 Res.MessageLogResDto response = await serviceFactoryProvider(request.ProviderId).ProviderService.RegisterMessageAsync(request);
-                Results.Ok(response);
+                return Results.Ok(response);
             })
             .WithName("AddMessageLog")
             .Produces<Res.MessageLogResDto>(StatusCodes.Status200OK)

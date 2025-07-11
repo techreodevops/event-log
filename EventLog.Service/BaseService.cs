@@ -1,7 +1,9 @@
-﻿namespace EventLog.Service
+﻿using Amazon.Athena;
+
+namespace EventLog.Service
 {
-    public class BaseService
+    public class BaseService(IAmazonAthena amazonAthena)
     {
-        public BaseService() { }
+        protected readonly IAmazonAthena amazonAthena = amazonAthena;
     }
 }
