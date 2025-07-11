@@ -1,6 +1,6 @@
 ﻿namespace EventLog.Middleware.Dtos.Common.Response;
 
-public sealed record GetByIdProviderLogResDto(
+public sealed record ProviderLogGetByIdResDto(
     string UserId,
     string Provider,
     string Method,

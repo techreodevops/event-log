@@ -8,10 +8,10 @@ public sealed record TransactionLogReqDto(
     string IdDevice,
     string TransactionType,
     string IsToken,
-    Geolocation Geolocation,
-    TrackingDevice TrackingDevice
+    GeolocationReqDto Geolocation,
+    TrackingDeviceReqDto TrackingDevice
 );
 
-public sealed record Geolocation(string Latitude, string Longitude);
+public sealed record GeolocationReqDto(string Latitude, string Longitude);
 
-public sealed record TrackingDevice(string AppVersion, string OsVersion, string Os, string DeviceModel, string DeviceManufacturer);
+public sealed record TrackingDeviceReqDto(string AppVersion, string OsVersion, string Os, string DeviceModel, string DeviceManufacturer);

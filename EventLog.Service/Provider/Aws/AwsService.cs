@@ -39,7 +39,7 @@ namespace EventLog.Service.Provider.Aws
             return new Res.ProviderLogResDto(id);
         }
 
-        public async Task<Res.GetByIdProviderLogResDto> GetByIdProviderLogAsync(string id)
+        public async Task<Res.ProviderLogGetByIdResDto> ProviderLogGetByIdAsync(string id)
         {
             var queryRequest = new StartQueryExecutionRequest
             {
@@ -53,7 +53,7 @@ namespace EventLog.Service.Provider.Aws
             var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
             var data = row.Data;
 
-            Res.GetByIdProviderLogResDto response = new(
+            Res.ProviderLogGetByIdResDto response = new(
                 data[1].VarCharValue,
                 data[2].VarCharValue,
                 data[3].VarCharValue,
@@ -92,8 +92,37 @@ namespace EventLog.Service.Provider.Aws
 
             return new Res.StructuredLogResDto(id);
         }
+        public async Task<Res.StructuredLogGetByIdResDto> StructuredLogGetByIdAsync(string id)
+        {
+            var queryRequest = new StartQueryExecutionRequest
+            {
+                QueryString = $"select * from {awsathena_db}.structuredlogs where _id = '{id}' ",
+                ResultConfiguration = new ResultConfiguration
+                {
+                    OutputLocation = $"{awss3_uri}/StructuredLog/"
+                }
+            };
+            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
+            var data = row.Data;
 
-        public async Task<Res.MessageLogResDto> RegisterMessageAsync(Req.MessageLogReqDto request)
+            Res.StructuredLogGetByIdResDto response = new(
+                data[1].VarCharValue,
+                data[2].VarCharValue,
+                data[3].VarCharValue,
+                data[4].VarCharValue,
+                data[5].VarCharValue,
+                data[6].VarCharValue,
+                data[7].VarCharValue,
+                data[8].VarCharValue,
+                data[9].VarCharValue,
+                data[11].VarCharValue
+            );
+
+            return response;
+        }
+
+        public async Task<Res.MessageLogResDto> RegisterMessageLogAsync(Req.MessageLogReqDto request)
         {
             string id = Guid.NewGuid().ToString();
             ReqAws.MessageLogDto messageLog = new()
@@ -113,12 +142,39 @@ namespace EventLog.Service.Provider.Aws
             return new Res.MessageLogResDto(id);
         }
 
+        public async Task<Res.MessageLogGetByIdResDto> MessageLogGetByIdAsync(string id)
+        {
+            var queryRequest = new StartQueryExecutionRequest
+            {
+                QueryString = $"select * from {awsathena_db}.messagelogs where _id = '{id}' ",
+                ResultConfiguration = new ResultConfiguration
+                {
+                    OutputLocation = $"{awss3_uri}/MessageLog/"
+                }
+            };
+            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
+            var data = row.Data;
+
+            Res.MessageLogGetByIdResDto response = new(
+                data[1].VarCharValue,
+                data[2].VarCharValue,
+                data[3].VarCharValue,
+                data[4].VarCharValue,
+                data[5].VarCharValue,
+                data[6].VarCharValue,
+                data[8].VarCharValue
+            );
+
+            return response;
+        }
+
         public async Task<Res.TransactionLogResDto> RegisterTransactionLogAsync(Req.TransactionLogReqDto request)
         {
             string id = Guid.NewGuid().ToString();
 
-            Req.Geolocation geolocationReq = request.Geolocation;
-            Req.TrackingDevice trackingDeviceReq = request.TrackingDevice;
+            Req.GeolocationReqDto geolocationReq = request.Geolocation;
+            Req.TrackingDeviceReqDto trackingDeviceReq = request.TrackingDevice;
 
             ReqAws.GeolocationTransactionLogDto geolocation = new(geolocationReq.Latitude, geolocationReq.Longitude);
             ReqAws.TrackingDeviceTransactionLogDto trackingDevice = new(
@@ -146,6 +202,37 @@ namespace EventLog.Service.Provider.Aws
             await AwsServiceFlow.SaveLogAwsS3(transactionLog);
 
             return new Res.TransactionLogResDto(id);
+        }
+
+        public async Task<Res.TransactionLogGetByIdResDto> TransactionLogGetByIdAsync(string id)
+        {
+            var queryRequest = new StartQueryExecutionRequest
+            {
+                QueryString = $"select * from {awsathena_db}.transactionlogs where _id = '{id}' ",
+                ResultConfiguration = new ResultConfiguration
+                {
+                    OutputLocation = $"{awss3_uri}/TransactionLog/"
+                }
+            };
+            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
+            var data = row.Data;
+
+            Res.GeolocationResDto geolocation = new(data[7].VarCharValue, data[8].VarCharValue);
+            Res.TrackingDeviceResDto trackingDevice = new(data[9].VarCharValue, data[10].VarCharValue, data[11].VarCharValue, data[12].VarCharValue, data[13].VarCharValue);
+            Res.TransactionLogGetByIdResDto response = new(
+                data[1].VarCharValue,
+                data[2].VarCharValue,
+                data[3].VarCharValue,
+                data[4].VarCharValue,
+                data[5].VarCharValue,
+                data[6].VarCharValue,
+                geolocation,
+                trackingDevice,
+                data[15].VarCharValue
+            );
+
+            return response;
         }
     }
 }
