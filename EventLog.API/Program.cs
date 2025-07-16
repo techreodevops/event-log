@@ -1,45 +1,22 @@
-using Amazon.Athena;
 using EventLog.API.Extensions;
-using EventLog.Middleware.Contracts.Factories;
-using EventLog.Middleware.Dtos.Common.Request;
-using EventLog.Middleware.Dtos.Common.Response;
-using EventLog.Service.Provider.Aws;
 using System.Reflection;
-using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddSwaggerGenWithAuth();
-
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 services.AddEndpoints(Assembly.GetExecutingAssembly());
+services.AddConfigureHttpJsonOptions();
 
-services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+services.AddDependencyInjection();
 
-services.AddScoped<Func<string, IServiceFactoryProvider>>(serviceFactory => key =>
-{
-    return key switch
-    {
-        "AWSS3" => serviceFactory.GetService<ServiceFactoryAws>(),
-        _ => throw new Exception("process invalid!")
-    };
-});
-
-services.AddScoped<ServiceFactoryAws>();
-
-services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-services.AddAWSService<IAmazonAthena>();
-
+services.AddAws(configuration);
 
 WebApplication app = builder.Build();
-
 
 app.MapEndpoints();
 
@@ -51,13 +28,3 @@ app.UseSwaggerUI(c =>
 });
 
 app.Run();
-
-[JsonSerializable(typeof(MessageLogReqDto))]
-[JsonSerializable(typeof(MessageLogGetByIdResDto))]
-[JsonSerializable(typeof(ProviderLogReqDto))]
-[JsonSerializable(typeof(ProviderLogGetByIdResDto))]
-[JsonSerializable(typeof(StructuredLogReqDto))]
-[JsonSerializable(typeof(StructuredLogGetByIdResDto))]
-[JsonSerializable(typeof(TransactionLogReqDto))]
-[JsonSerializable(typeof(TransactionLogGetByIdResDto))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext { }
