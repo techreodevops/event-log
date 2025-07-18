@@ -1,0 +1,20 @@
+services:
+  event_log_api:
+    container_name: event_log_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_URLS=http://+:80
+      - AWSATHENA_DB=byndfi_dev
+      - AWSS3_URL=https://zblhq06zq2.execute-api.sa-east-1.amazonaws.com/dev/logs"
+      - AWSS3_API_KEY=sf3E0U94Zv7FQSN8yCVqq2gQcKhgL4JC2V05HrjW"
+      - AWSS3_URI=s3://325723654089-logs-dev
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    ports:
+      - "5206:80"
+    restart:
+      always

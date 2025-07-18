@@ -3,9 +3,9 @@ using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Endpoints.EventLogs.MessageLog
 {
-    public class MessageLogGetByIdEndpoint : IEndpoint
+    public static class MessageLogGetByIdEndpoint
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapMessageLogGetByIdEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapGet("message/{providerId}/{id}", async (string providerId, string id, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
@@ -17,6 +17,8 @@ namespace EventLog.API.Endpoints.EventLogs.MessageLog
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Get Message Log By Id")
             .WithDescription("Get Message Log By Id");
+
+            return app;
         }
     }
 }

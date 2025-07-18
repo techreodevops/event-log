@@ -1,37 +1,52 @@
-﻿using EventLog.API.Endpoints;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Reflection;
+﻿using EventLog.API.Endpoints.EventLogs.MessageLog;
+using EventLog.API.Endpoints.EventLogs.ProviderLog;
+using EventLog.API.Endpoints.EventLogs.StructuredLog;
+using EventLog.API.Endpoints.EventLogs.TransactionLog;
+using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Extensions
 {
     public static class EndpointExtensions
     {
-        public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
+        public static IEndpointRouteBuilder MapTesApi(this IEndpointRouteBuilder app)
         {
-            ServiceDescriptor[] serviceDescriptors = assembly
-                .DefinedTypes
-                .Where(type => type is { IsAbstract: false, IsInterface: false } &&
-                               type.IsAssignableTo(typeof(IEndpoint)))
-                .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
-                .ToArray();
+            app.MapGet("test", () =>
+            {
+                Res.EventLogTestResDto response = new(DateTime.UtcNow, "1.0");
+                return Results.Ok(response);
+            });
 
-            services.TryAddEnumerable(serviceDescriptors);
-
-            return services;
+            return app;
         }
 
-        public static IApplicationBuilder MapEndpoints(
-        this WebApplication app,
-        RouteGroupBuilder? routeGroupBuilder = null)
+        public static IEndpointRouteBuilder MapMessageApi(this IEndpointRouteBuilder app)
         {
-            IEnumerable<IEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
+            app.MapAddMessageLogEndpoint();
+            app.MapMessageLogGetByIdEndpoint();
 
-            IEndpointRouteBuilder builder = routeGroupBuilder is null ? app : routeGroupBuilder;
+            return app;
+        }
 
-            foreach (IEndpoint endpoint in endpoints)
-            {
-                endpoint.MapEndpoint(builder);
-            }
+        public static IEndpointRouteBuilder MapProviderApi(this IEndpointRouteBuilder app)
+        {
+            app.MapAddProviderLogEndpoint();
+            app.MapProviderLogGetByIdEndpoint();
+
+            return app;
+        }
+
+        public static IEndpointRouteBuilder MapStructuredLogApi(this IEndpointRouteBuilder app)
+        {
+            app.MapAddStructuredLogEndpoint();
+            app.MapStructuredLogGetByIdEndpoint();
+
+            return app;
+        }
+
+        public static IEndpointRouteBuilder MapTransactionLogApi(this IEndpointRouteBuilder app)
+        {
+            app.MapAddTransactionLogEndpoint();
+            app.MapTransactionLogGetByIdEndpoint();
 
             return app;
         }

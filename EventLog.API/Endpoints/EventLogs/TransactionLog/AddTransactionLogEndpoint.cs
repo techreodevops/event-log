@@ -4,9 +4,9 @@ using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Endpoints.EventLogs.TransactionLog
 {
-    public class AddTransactionLogEndpoint : IEndpoint
+    public static class AddTransactionLogEndpoint
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapAddTransactionLogEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapPost("transaction", async (Req.TransactionLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
@@ -18,6 +18,8 @@ namespace EventLog.API.Endpoints.EventLogs.TransactionLog
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Add Transaction Log")
             .WithDescription("Add Transaction Log");
+
+            return app;
         }
     }
 }

@@ -3,9 +3,9 @@ using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Endpoints.EventLogs.StructuredLog
 {
-    public class StructuredLogGetByIdEndpoint : IEndpoint
+    public static class StructuredLogGetByIdEndpoint
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapStructuredLogGetByIdEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapGet("structured/{providerId}/{id}", async (string providerId, string id, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
@@ -17,6 +17,8 @@ namespace EventLog.API.Endpoints.EventLogs.StructuredLog
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Get Structured Log By Id")
             .WithDescription("Get Structured Log By Id");
+
+            return app;
         }
     }
 }

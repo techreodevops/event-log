@@ -41,7 +41,7 @@ namespace EventLog.Service.Provider.Aws
 
         public async Task<Res.ProviderLogGetByIdResDto> ProviderLogGetByIdAsync(string id)
         {
-            var queryRequest = new StartQueryExecutionRequest
+            StartQueryExecutionRequest queryRequest = new()
             {
                 QueryString = $"select * from {awsathena_db}.providerlogs where _id = '{id}' ",
                 ResultConfiguration = new ResultConfiguration
@@ -49,9 +49,9 @@ namespace EventLog.Service.Provider.Aws
                     OutputLocation = $"{awss3_uri}/ProviderLog/"
                 }
             };
-            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
-            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
-            var data = row.Data;
+            GetQueryResultsResponse result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            Row row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception($"data not found with id: {id}");
+            List<Datum> data = row.Data;
 
             Res.ProviderLogGetByIdResDto response = new(
                 data[1].VarCharValue,
@@ -94,7 +94,7 @@ namespace EventLog.Service.Provider.Aws
         }
         public async Task<Res.StructuredLogGetByIdResDto> StructuredLogGetByIdAsync(string id)
         {
-            var queryRequest = new StartQueryExecutionRequest
+            StartQueryExecutionRequest queryRequest = new()
             {
                 QueryString = $"select * from {awsathena_db}.structuredlogs where _id = '{id}' ",
                 ResultConfiguration = new ResultConfiguration
@@ -102,9 +102,9 @@ namespace EventLog.Service.Provider.Aws
                     OutputLocation = $"{awss3_uri}/StructuredLog/"
                 }
             };
-            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
-            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
-            var data = row.Data;
+            GetQueryResultsResponse result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            Row row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception($"data not found with id: {id}");
+            List<Datum> data = row.Data;
 
             Res.StructuredLogGetByIdResDto response = new(
                 data[1].VarCharValue,
@@ -144,7 +144,7 @@ namespace EventLog.Service.Provider.Aws
 
         public async Task<Res.MessageLogGetByIdResDto> MessageLogGetByIdAsync(string id)
         {
-            var queryRequest = new StartQueryExecutionRequest
+            StartQueryExecutionRequest queryRequest = new()
             {
                 QueryString = $"select * from {awsathena_db}.messagelogs where _id = '{id}' ",
                 ResultConfiguration = new ResultConfiguration
@@ -152,9 +152,9 @@ namespace EventLog.Service.Provider.Aws
                     OutputLocation = $"{awss3_uri}/MessageLog/"
                 }
             };
-            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
-            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
-            var data = row.Data;
+            GetQueryResultsResponse result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            Row row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception($"data not found with id: {id}");
+            List<Datum> data = row.Data;
 
             Res.MessageLogGetByIdResDto response = new(
                 data[1].VarCharValue,
@@ -206,7 +206,7 @@ namespace EventLog.Service.Provider.Aws
 
         public async Task<Res.TransactionLogGetByIdResDto> TransactionLogGetByIdAsync(string id)
         {
-            var queryRequest = new StartQueryExecutionRequest
+            StartQueryExecutionRequest queryRequest = new()
             {
                 QueryString = $"select * from {awsathena_db}.transactionlogs where _id = '{id}' ",
                 ResultConfiguration = new ResultConfiguration
@@ -214,12 +214,18 @@ namespace EventLog.Service.Provider.Aws
                     OutputLocation = $"{awss3_uri}/TransactionLog/"
                 }
             };
-            var result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
-            var row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception("");
-            var data = row.Data;
+            GetQueryResultsResponse result = await amazonAthena.QueryAsyncLight(queryRequest, 5);
+            Row row = result.ResultSet.Rows.Skip(1).FirstOrDefault() ?? throw new Exception($"data not found with id: {id}");
+            List<Datum> data = row.Data;
 
             Res.GeolocationResDto geolocation = new(data[7].VarCharValue, data[8].VarCharValue);
-            Res.TrackingDeviceResDto trackingDevice = new(data[9].VarCharValue, data[10].VarCharValue, data[11].VarCharValue, data[12].VarCharValue, data[13].VarCharValue);
+            Res.TrackingDeviceResDto trackingDevice = new(
+                data[9].VarCharValue, 
+                data[10].VarCharValue, 
+                data[11].VarCharValue, 
+                data[12].VarCharValue, 
+                data[13].VarCharValue
+            );
             Res.TransactionLogGetByIdResDto response = new(
                 data[1].VarCharValue,
                 data[2].VarCharValue,

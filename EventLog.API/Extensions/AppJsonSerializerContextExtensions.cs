@@ -18,6 +18,7 @@ namespace EventLog.API.Extensions
     }
 }
 
+[JsonSerializable(typeof(Res.EventLogTestResDto))]
 [JsonSerializable(typeof(Req.MessageLogReqDto))]
 [JsonSerializable(typeof(Res.MessageLogGetByIdResDto))]
 [JsonSerializable(typeof(Req.ProviderLogReqDto))]

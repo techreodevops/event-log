@@ -4,9 +4,9 @@ using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Endpoints.EventLogs.ProviderLog
 {
-    public class AddProviderLogEndpoint : IEndpoint
+    public static class AddProviderLogEndpoint
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapAddProviderLogEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapPost("provider", async (Req.ProviderLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
@@ -18,6 +18,8 @@ namespace EventLog.API.Endpoints.EventLogs.ProviderLog
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Add Provider Log")
             .WithDescription("Add Provider Log");
+
+            return app;
         }
     }
 }

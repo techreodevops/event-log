@@ -4,9 +4,9 @@ using Res = EventLog.Middleware.Dtos.Common.Response;
 
 namespace EventLog.API.Endpoints.EventLogs.MessageLog
 {
-    public class AddMessageLogEndpoint : IEndpoint
+    public static class AddMessageLogEndpoint
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapAddMessageLogEndpoint(this IEndpointRouteBuilder app)
         {
             app.MapPost("message", async (Req.MessageLogReqDto request, Func<string, IServiceFactoryProvider> serviceFactoryProvider) =>
             {
@@ -18,6 +18,8 @@ namespace EventLog.API.Endpoints.EventLogs.MessageLog
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Add Message Log")
             .WithDescription("Add Message Log");
+
+            return app;
         }
     }
 }
